@@ -1,10 +1,13 @@
 ---
 title: "ENV 790.30 - Time Series Analysis for Energy Data | Spring 2023"
-subtitle: "Assignment 4 - Due date 02/17/23"
 author: "John Rooney"
-output: pdf_document
+subtitle: "Assignment 4 - Due date 02/17/23"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
   
@@ -40,6 +43,7 @@ energy_data <- read.csv(file="./Data/Table_10.1_Renewable_Energy_Production_and_
 
 renewable.energy.data <- select(energy_data, Month, Total.Renewable.Energy.Production)
 
+nobs=nrow(renewable.energy.data)
 ```
 
 
@@ -59,7 +63,7 @@ ts.renewable.energy.data <- ts(renewable.energy.data, 2, frequency=12)
 diff.renewable.energy.data<-diff(ts.renewable.energy.data,lag=1,differences=1)
 plot(diff.renewable.energy.data)
 ```
-To my eyes the series have no significant trend. 
+> Answer: To my eyes the series have no significant trend. 
 ### Q2
 
 Now let's compare the differenced series with the detrended series you calculated on A3. In other words, for the "Total Renewable Energy Production" compare the differenced series from Q1 with the series you detrended in A3 using linear regression. (Hint: Just copy and paste part of your code for A3)
@@ -67,7 +71,7 @@ Now let's compare the differenced series with the detrended series you calculate
 Copy and paste part of your code for A3 where you compute regression for Total Energy Production and the detrended Total Energy Production
 
 ```{r}
-t<-c(1:597)
+t<-c(1:nobs)
 renewable_linear_trend_model<-lm(ts.renewable.energy.data[,"Total.Renewable.Energy.Production"]~t)
 summary(renewable_linear_trend_model)
 
@@ -76,9 +80,9 @@ renewable_beta1=as.numeric(renewable_linear_trend_model$coefficients[2])
 
 detrend_renewable <- ts.renewable.energy.data[,"Total.Renewable.Energy.Production"]-(renewable_beta0+renewable_beta1*t)
 
-plot(detrend_renewable,type="l",col="steelblue1",xlab="Year",ylab="Trillion Btu",main="Detrended Total Renewable Energy Production")
+plot(detrend_renewable,type="l",col="steelblue1",xlab="Year",ylab="Renewable Energy Production (Trillion Btu)",main="Detrended Total Renewable Energy Production")
 ```
-To my eye, the differenced series more successfully removed trend then the detrend process. The detrended series shows a general decrease over the first 30 years followed by a sharp rise that ends well above the starting value in 1973. 
+> Answer: To my eye, the differenced series more successfully removed trend then the detrend process. The detrended series shows a general decrease over the first 30 years followed by a sharp rise that ends well above the starting value in 1973. 
 
 ### Q3
 Create a data frame with 4 columns: month, original series, detrended by Regression Series and differenced series. Make sure you properly name all columns. Also note that the differenced series will have only 584 rows because you loose the first observation when differencing. Therefore, you need to remove the first observations for the original series and the detrended by regression series to build the new data frame.
@@ -90,9 +94,9 @@ noJan73.renewable.energy.data <- renewable.energy.data[-1,]
 
 renewable.energy.all.series <- data.frame(diff.renewable.energy.data,noJan73_detrend_renewable,noJan73.renewable.energy.data)
 
-colnames(renewable.energy.all.series) <- c("Differenced Month", "Differenced Series", "Detrended Series", "Original Month", "Original Series")
+colnames(renewable.energy.all.series) <- c("Differenced Month", "Differenced Series", "Detrended Series", "Month", "Original Series")
 
-renewable.energy.all.series<-renewable.energy.all.series[,-4]
+renewable.energy.all.series<-renewable.energy.all.series[,-1]
 ```
 
 ### Q4
@@ -100,11 +104,11 @@ Using ggplot() create a line plot that shows the three series together. Make sur
 
 ```{r}
 #Use ggplot
-ggplot(renewable.energy.all.series, aes(x="Differenced Month"))+
+ggplot(renewable.energy.all.series, aes(x=Month))+
   geom_line(aes(y="Original Series"),color="coral2")+
   geom_line(aes(y="Detrended Series"),color="skyblue")+
   geom_line(aes(y="Differenced Series"), color="darkseagreen3")+
-  labs(title="Total Renewable Energy Production", x="Years", y="Trillion Btu")
+  labs(title="Total Renewable Energy Production", x="Years", y="Renewable Energy Production (Trillion Btu)")
   
 #not sure why this isn't plotting
 ```
@@ -115,20 +119,21 @@ Plot the ACF for the three series and compare the plots. Add the argument `ylim=
 
 ```{r}
 #Compare ACFs
-Acf(renewable.energy.all.series[,2],lag.max=40,main=paste("Differenced Series",sep=""))
-Acf(renewable.energy.all.series[,3],lag.max=40,main=paste("Detrended Series",sep=""))
-Acf(renewable.energy.all.series[,4],lag.max=40,main=paste("Original Series",sep=""))
+Acf(renewable.energy.all.series[,2],lag.max=40,ylim=c(-0.5,1),main=paste("Differenced Series",sep=""))
+Acf(renewable.energy.all.series[,3],lag.max=40,ylim=c(-0.5,1),main=paste("Detrended Series",sep=""))
+Acf(renewable.energy.all.series[,4],lag.max=40,ylim=c(-0.5,1),main=paste("Original Series",sep=""))
 ```
-The differencing method appears to be more efficient in eliminating the trend.
+> Answer: The differencing method appears to be more efficient in eliminating the trend.
 
 ### Q6
 Compute the Seasonal Mann-Kendall and ADF Test for the original "Total Renewable Energy Production" series. Ask R to print the results. Interpret the results for both test. Whats the conclusion from the Seasonal Mann Kendall test? What's the conclusion for the ADF test? Do they match what you observed in Q2? Recall that having a unit root means the series has a stochastic trend. And when a series has stochastic trend we need to use a different procedure to remove the trend.
 
 ```{r}
-SMKtest.original.series <- SeasonalMannKendall(renewable.energy.all.series[,4])
+SMKtest.original.series <- SeasonalMannKendall(ts(renewable.energy.all.series[,4], frequency=12))
 print(summary(SMKtest.original.series))
 
-print(adf.test(renewable.energy.all.series[,4],alternative = "stationary"))
+print(adf.test(ts(renewable.energy.all.series[,4], frequency=12)))
+
 ```
 
 ### Q7
@@ -140,20 +145,17 @@ renewable.data.matrix <- matrix(energy_data[1:588,5], byrow=F, nrow=12)
 renewable.data.yearly <- colMeans(renewable.data.matrix)
 
 ```
-my_year <- c(year(first(energy_data$Month)):year(last(energy_data$Month)))
-#getting an error message I'm not sure how to fix
-new.renewable.data.yearly <- data.frame(my_year, renewable.data.yearly)
+
 ### Q8
 
 Apply the Mann Kendal, Spearman correlation rank test and ADF. Are the results from the test in agreement with the test results for the non-aggregated series, i.e., results for Q6?
 
 ```{r}
-print(summary(MannKendall(new.renewable.data.yearly)))
+print(summary(MannKendall(renewable.data.yearly)))
 
+t <- 1:length(renewable.data.yearly)
+cor.test(x=ts(renewable.data.yearly),y=t,method="spearman")
 
-
-print(adf.test(new.renewable.data.yearly, alternative = "stationary"))
+#print(adf.test(ts(renewable.data.yearly)))
+#couldn't get this to run
 ```
-Got stuck doing the coding I needed to do in order to run Spearman.
-sp_rho=cor(renewable.data.yearly, my_year,method="spearman")
-print(sp_rho)
