@@ -1,7 +1,11 @@
 ---
 title: "ENV 790.30 - Time Series Analysis for Energy Data | Spring 2023"
 subtitle: "Assignment 7 - Due date 03/20/23"
+<<<<<<< HEAD
 author: "John Rooney"
+=======
+author: "Student Name"
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 output: pdf_document
 geometry: margin=2.54cm
 ---
@@ -20,8 +24,12 @@ When you have completed the assignment, **Knit** the text and code into a single
 
 ```{r}
 #Load/install required package here
+<<<<<<< HEAD
 library(forecast)
 library(tseries)
+=======
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ```
 
 ## Importing and processing the data set

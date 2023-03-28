@@ -30,9 +30,15 @@ Second R code chunk is for loading packages. By setting message = FALSE, the cod
 library(lubridate)
 library(ggplot2)
 library(forecast)  
+<<<<<<< HEAD
 library(Kendall)
 library(tseries)
 library(outliers)
+=======
+#library(Kendall)
+library(tseries)
+#library(outliers)
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 library(tidyverse)
 library(smooth)
 
@@ -60,6 +66,7 @@ forecast=c(110,121,112,120,109)
 #Exercise 1: compute MAD, MSE and MAPE
 n=length(actual)
 
+<<<<<<< HEAD
 ME = (-3+4+3+-2+1)/5 = .6
 MSE = (-3+4+3+-2+1)^2/5 = 1.8
 RMSE = sqrt(1.8) = 1.341641
@@ -78,6 +85,19 @@ MAPE = sum(abs(actual-forecast)/actual)/n*100
 manual_scores <- as.data.frame(cbind(ME,RMSE,MAE,MPE,MAPE))
 
 auto_scores <- as.data.frame(accuracy(forecast,actual))
+=======
+ME = 
+MSE = 
+RMSE = 
+MAE = 
+MPE = 
+MAPE = 
+
+
+
+#Exercise 2: Compute the forecast accuracy metrics you calculated in Ex 1 with the results from accuracy() function.
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ```
 

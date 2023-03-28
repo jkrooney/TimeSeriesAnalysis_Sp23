@@ -34,7 +34,11 @@ Let's continue working with our inflow data for reservoirs in Brazil.
 ```{r}
 
 #Importing time series data from text file#
+<<<<<<< HEAD
 raw_inflow_data <- read.table(file="./Data/inflowtimeseries.txt",header=FALSE,skip=0)
+=======
+raw_inflow_data <- read.table(file="../Data/inflowtimeseries.txt",header=FALSE,skip=0)
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #Trim the table to include only columns you need
 nhydro <- ncol(raw_inflow_data)-2
@@ -135,7 +139,11 @@ for(i in 1:nhydro){
 
 ## Trend Component
 
+<<<<<<< HEAD
 Let's identify and remove trend component like we learned in class. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
+=======
+Let's identify and remove trend component like we leaned on the recorded videos for M4. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ```{r}
 #Create vector t
@@ -154,6 +162,7 @@ ggplot(inflow_data,aes(x=my_date,y=inflow_data[,iHP+1]))+
 
 
 ```{r}
+<<<<<<< HEAD
 beta0<-linear_trend$coefficients[1]
 beta1<-linear_trend$coefficients[2]
 
@@ -165,6 +174,14 @@ ggplot(inflow_data,aes(x=my_date,y=inflow_data[,iHP+1]))+
   geom_line(aes(y=detrend_inflow_data),color="green")
 ```
 Note that blue line is our original series, red line is our trend, green line is our original series minus the trend or in other words the detrended series. And in orange is the trend line for the detrended series which has slope 0 meaning we were able to effectively eliminate the trend with a linear model.
+=======
+#remove the trend from series
+
+
+
+```
+Note that blue line is our original series, red lien is our trend, green line is our original series minus the trend or in other words the detrended series. And in orange is the trend line for the detrended series which has slope 0 meaning we were able to effectively eliminate the trend with a linear model.
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ## Seasonal Component
 
@@ -172,6 +189,7 @@ Now let's shift attention to the seasonal component.
 
 ```{r}
 #Use seasonal means model
+<<<<<<< HEAD
 iHP=1
 dummies<-seasonaldummy(ts_inflow_data[,iHP])
 
@@ -190,6 +208,10 @@ for(i in 1:nobs){
 ggplot(inflow_data,aes(x=my_date,y=inflow_data[,iHP+1]))+
   geom_line(color="blue")+
   geom_line(aes(y=inflow_seas_comp),color="orange")
+=======
+
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ```
 
 ##Exercise
@@ -215,10 +237,15 @@ Check for deterministic trend.
 
 #Since I have seasonal data I cannot use the simple MannKendall()
 #another example of functions that need a ts object
+<<<<<<< HEAD
 SMKtest <- SeasonalMannKendall(ts_inflow_data[,iHP])
 print(summary(SMKtest))
 
 #because of small p-value, we reject null hypothesis that there is no trend
+=======
+
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 #Use yearly date to run Mann Kendall
 
 ```
@@ -243,7 +270,10 @@ Used to detect stochastic trend.
 ```{r}
 #Null hypothesis is that data has a unit root
 print("Results for ADF test/n")
+<<<<<<< HEAD
 print(adf.test(ts_inflow_data[,iHP]),alternative="stationarity")
+=======
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #Now let's try the yearly data
 print("Results for ADF test on yearly data/n")

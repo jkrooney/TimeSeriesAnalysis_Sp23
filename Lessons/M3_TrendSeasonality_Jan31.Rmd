@@ -2,8 +2,11 @@
 title: "M3: Class Exercise on Trend and Season - after class Jan 31"
 author: "Luana Lima"
 output: pdf_document
+<<<<<<< HEAD
 editor_options: 
   chunk_output_type: console
+=======
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ---
 
 ## Setting R code chunk options
@@ -34,7 +37,11 @@ Let's continue working with our inflow data for reservoirs in Brazil.
 ```{r}
 
 #Importing time series data from text file#
+<<<<<<< HEAD
 raw_inflow_data <- read.table(file="./Data/inflowtimeseries.txt",header=FALSE,skip=0)
+=======
+raw_inflow_data <- read.table(file="../Data/inflowtimeseries.txt",header=FALSE,skip=0)
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #Trim the table to include only columns you need
 nhydro <- ncol(raw_inflow_data)-2
@@ -96,7 +103,11 @@ Note our last observation is from August 2011 but the data file was filled with 
 
 ```{r}
 #Remove last year by replacing current data frame
+<<<<<<< HEAD
 inflow_data <- inflow_data[1:(nobs-12),]
+=======
+inflow_data <- inflow_data[1:(nobs-412,]
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #update object with number of observations
 nobs <- nobs-12
@@ -111,8 +122,12 @@ Fixed!
 Many of the functions we will use require a time series object. You can transform your data in a time series using the function *ts()*. 
 
 ```{r}
+<<<<<<< HEAD
 class_ts_inflow_data<-ts(inflow_data[,2:(2+nhydro-1)], frequency=12,start=c(1931,1))
 head(class_ts_inflow_data,20)
+=======
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ```
 
 
@@ -121,16 +136,23 @@ head(class_ts_inflow_data,20)
 Let's use functions Acf() and Pacf() from package "forecast".
 
 ```{r acf}
+<<<<<<< HEAD
 for(i in 1:nhydro){
   par(mfrow=c(1,2))
 Acf(class_ts_inflow_data[,i], lag.max = 40, main=paste0("HP",i),ylim=c(-1,1))
 Pacf(class_ts_inflow_data[,1], lag.max = 40, main=paste0("HP",i),ylim=c(-1,1))
 }
+=======
+
+
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ```
 
 
 ## Trend Component
 
+<<<<<<< HEAD
 Let's identify and remove trend component like we learned in class. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
 
 ```{r}
@@ -145,6 +167,17 @@ summary(linear_trend)
 ggplot(inflow_data,aes(x=my_date,y=inflow_data[,iHP+1]))+
   geom_line(color="blue")+
   geom_smooth(method = "lm",color="red")
+=======
+Let's identify and remove trend component like we leaned on the recorded videos for M4. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
+
+```{r}
+#Create vector t
+
+
+
+#Fit a linear trend to TS of iHP
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ```
 
@@ -155,7 +188,11 @@ ggplot(inflow_data,aes(x=my_date,y=inflow_data[,iHP+1]))+
 
 
 ```
+<<<<<<< HEAD
 Note that blue line is our original series, red line is our trend, green line is our original series minus the trend or in other words the detrended series. And in orange is the trend line for the detrended series which has slope 0 meaning we were able to effectively eliminate the trend with a linear model.
+=======
+Note that blue line is our original series, red lien is our trend, green line is our original series minus the trend or in other words the detrended series. And in orange is the trend line for the detrended series which has slope 0 meaning we were able to effectively eliminate the trend with a linear model.
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ## Seasonal Component
 

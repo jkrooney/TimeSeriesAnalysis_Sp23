@@ -133,7 +133,11 @@ for(i in 1:nhydro){
 
 ## Trend Component
 
+<<<<<<< HEAD
 Let's identify and remove trend component like we learned on the recorded videos for M4. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
+=======
+Let's identify and remove trend component like we leaned on the recorded videos for M4. You start by fitting a linear model to $Y_t=\beta_0+\beta_1*t+\epsilon_t$. 
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 ```{r}
 #Create vector t
@@ -229,8 +233,13 @@ ggplot(inflow_data, aes(x=my_date, y=inflow_data[,(1+iHP)])) +
 Before we get started with the tests recall that for the year 2011 we only have data until Aug 2011. Let's filter our dataset to remove that last year. 
 
 ```{r}
+<<<<<<< HEAD
 ts_inflow_data <- as.ts(ts_inflow_data[1:948,])
 my_date <- my_date[1:948]
+=======
+ts_inflow_data <- as.ts(ts_inflow_data[1:960,])
+my_date <- my_date[1:960]
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #create new df
 inflow_data_new <- cbind(my_date, ts_inflow_data)

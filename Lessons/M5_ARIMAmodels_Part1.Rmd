@@ -1,5 +1,9 @@
 ---
+<<<<<<< HEAD
 title: "M5: ARIMA Models in R"
+=======
+title: "M6: ARIMA Models in R"
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 author: "Luana Lima"
 output: pdf_document
 editor_options: 
@@ -143,14 +147,22 @@ ggplot(df_residential, aes(x=Month)) +
 #Comparing ACFs
 par(mar=c(3,3,3,0));par(mfrow=c(1,2))
 Acf(df_residential$Residential,lag.max=40,main="Residential")
+<<<<<<< HEAD
 Acf(df_residential$NonSeasonalResidential,lag.max=40,main="Non Seasonal Residential")
+=======
+Acf(df_residential$NonSeasonalResidential,lag.max=40,main="Non Sesonal Residential")
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 #Note seasonality is gone!
 
 #Comparing PACFs
 par(mar=c(3,3,3,0));par(mfrow=c(1,2))
 Pacf(df_residential$Residential,lag.max=40,main="Residential")
+<<<<<<< HEAD
 Pacf(df_residential$NonSeasonalResidential,lag.max=40,main="Non Seasonal Residential")
+=======
+Pacf(df_residential$NonSeasonalResidential,lag.max=40,main="Non Sesonal Residential")
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 
 ```

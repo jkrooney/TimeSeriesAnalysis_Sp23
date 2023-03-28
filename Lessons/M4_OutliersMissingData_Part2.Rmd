@@ -96,7 +96,11 @@ The random component is the time series without seasonal and trend component. Le
 
 Additional info on decompose()
 
+<<<<<<< HEAD
 1) You have two options: additive and multiplicative. Multiplicative models exhibit a change in frequency over time.
+=======
+1) You have two options: alternative and multiplicative. Multiplicative models exhibit a change in frequency over time.
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 
 2) The trend is not a straight line because it uses a moving average method to detect trend. 
 
@@ -106,6 +110,7 @@ Additional info on decompose()
 
 ```{r}
 #Ex1: Using R decompose function decompose the wind data in seasonal, trend and random
+<<<<<<< HEAD
 decompose_wind_data=decompose(clean_wind_data)
 plot(decompose_wind_data)
 
@@ -129,6 +134,21 @@ plot(decompose_multi_wind_data)
 #Ex6 stl function (can only do additive)
 stl_decompose_wind_data<- stl(clean_wind_data, s.window="periodic")
 plot(stl_decompose_wind_data)
+=======
+
+
+#Ex2: Store the three component in separate vector
+  
+
+#Ex3: Create one data frame with all three vector and the Date columns from wind_data
+
+
+#Ex4: Inspect the data frame using head() and tail()
+
+
+# Discuss the results
+
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ```
 
 

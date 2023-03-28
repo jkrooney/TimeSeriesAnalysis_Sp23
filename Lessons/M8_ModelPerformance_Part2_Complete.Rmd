@@ -1,13 +1,17 @@
 ---
 title: "M8: Forecast Accuracy & Model Performance - Exercise"
 author: "Luana Lima"
+<<<<<<< HEAD
 date: "03/24/2021"
+=======
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 output: pdf_document
 always_allow_html: true
 editor_options: 
   chunk_output_type: inline
 ---
 
+<<<<<<< HEAD
 ## Objectives
 
 1.  Answer questions on M9
@@ -15,6 +19,8 @@ editor_options:
 3.  Finish exercise from "08_Lab_Forecasting.Rmd" (repeated on this file)
 4.  Calculate accuracy metrics.
 
+=======
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 ## Setting R code chunk options
 
 First R code chunk is used for setting the options for all R code chunks. The choice echo=TRUE means both code and output will appear on report, include = FALSE neither code nor output is printed.
@@ -31,9 +37,15 @@ Second R code chunk is for loading packages. By setting message = FALSE, the cod
 library(lubridate)
 library(ggplot2)
 library(forecast)  
+<<<<<<< HEAD
 library(Kendall)
 library(tseries)
 library(outliers)
+=======
+#library(Kendall)
+library(tseries)
+#library(outliers)
+>>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 library(tidyverse)
 library(smooth)
 
