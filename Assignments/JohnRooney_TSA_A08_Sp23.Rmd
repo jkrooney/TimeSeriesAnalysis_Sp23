@@ -84,6 +84,8 @@ decomp_inflow_data <- decompose(ts_inflow_data, "additive")
 deseason_inflow_data <- seasadj(decomp_inflow_data)
 
 #plot deseasonalized and original series
+
+
 #deseasonal_and_original_plot
 
 #ACF and PACF
@@ -121,7 +123,7 @@ Put the seasonality back on your forecasted values and compare with the original
 Repeat Q3 for the original data, but now fit a seasonal ARIMA$(p,d,q)x(P,D,Q)_ {12}$ also using the auto.arima().
 
 ```{r}
-SARIMA_autofit <- auto.arima(inflow_data[,3])
+SARIMA_autofit <- auto.arima(ts_inflow_data)
 print(SARIMA_autofit)
 
 SARIMA_forecast <- forecast(object = SARIMA_autofit, h = 12)

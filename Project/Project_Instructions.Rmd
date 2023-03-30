@@ -54,7 +54,7 @@ Write a few paragraphs detailing the rationale for your study. This should inclu
 
 Provide information on how the dataset for this analysis were collected (source), the data contained in the dataset (format). Describe how you wrangled/processed your dataset to get the time series object.
 
-Add a table that summarizes your data structure (variables, units, ranges and/or central tendencies, data source if multiple are used, etc.). This table should inserted as a `kable` function in an R chunk. Just show the firts 10 rows of your data. Do not include the code used to generate your table.
+Add a table that summarizes your data structure (variables, units, ranges and/or central tendencies, data source if multiple are used, etc.). This table should inserted as a `kable` function in an R chunk. Just show the first 10 rows of your data. Do not include the code used to generate your table.
 
 
 #### Analysis (Methods and Models)
