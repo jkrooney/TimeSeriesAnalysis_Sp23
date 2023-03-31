@@ -1,8 +1,10 @@
 ---
 title: "ENV 790.30 - Time Series Analysis for Energy Data | Spring 2023"
-subtitle: "Assignment 8 - Due date 03/27/23"
 author: "John Rooney"
-output: pdf_document
+subtitle: "Assignment 8 - Due date 03/27/23"
+output:
+  html_document:
+    df_print: paged
 geometry: margin=2.54cm
 ---
 
@@ -26,6 +28,7 @@ library(smooth)
 library(here)
 library(lubridate)
 library(tidyverse)
+library(kableExtra)
 ```
 
 ## Importing and processing the data set
@@ -52,23 +55,31 @@ colnames(raw_inflow_data)=c("Month","Year", "HP1", "HP2","HP3","HP4", "HP5",
                             "HP13", "HP14","HP15")
 
 
-#wrangle data set
-inflow_data<-
+#wrangle data sets
+inflow_data_test <-
   raw_inflow_data %>%
   dplyr::filter(Year >= 2000 & Year <= 2009) %>%
   dplyr::select(Month, Year, HP15)
 
+inflow_data_full <- 
+  raw_inflow_data %>%
+  filter(Year >= 2000 & Year <= 2010) %>%
+  select(Month, Year, HP15)
+
+
 
 #make a time series for HP15 from January 2000 to December 2009
-ts_inflow_data <- ts(inflow_data[,3], start=1, frequency=12) 
+ts_inflow_test <- ts(inflow_data_test[,3], start=c(2000,1), frequency=12) 
+
+ts_inflow_full <- ts(inflow_data_full[,3], start=c(2000,1), frequency=12)
 
 #plot the time series
-plot(ts_inflow_data)
+plot(ts_inflow_test)
 
 #Acf and Pacf for HP15
-Acf(ts_inflow_data,lag.max=40,main=paste("Inflows HP15",sep="")) 
+Acf(ts_inflow_test,lag.max=40,main=paste("Inflows HP15",sep="")) 
   
-Pacf(ts_inflow_data,lag.max=40,main=paste("Inflows HP15",sep=""))
+Pacf(ts_inflow_test,lag.max=40,main=paste("Inflows HP15",sep=""))
 
 
 ```
@@ -79,19 +90,24 @@ Using the $decompose()$ or $stl()$ and the $seasadj()$ functions create a series
 
 ```{r}
 #decompose the time series
-decomp_inflow_data <- decompose(ts_inflow_data, "additive")
+decomp_inflow_test <- decompose(ts_inflow_test, "additive")
 
-deseason_inflow_data <- seasadj(decomp_inflow_data)
+decomp_inflow_full <- decompose(ts_inflow_full, "additive")
+
+deseason_inflow_test <- seasadj(decomp_inflow_test)
+
+deseason_inflow_full <- seasadj(decomp_inflow_full)
 
 #plot deseasonalized and original series
-
+autoplot(ts_inflow_full) +
+  autolayer(deseason_inflow_full, series="Deseason")
 
 #deseasonal_and_original_plot
 
 #ACF and PACF
-Acf(deseason_inflow_data,lag.max=40,main=paste("Deseasoned Inflows HP15",sep="")) 
+Acf(deseason_inflow_full,lag.max=40,main=paste("Deseasoned Inflows HP15",sep="")) 
   
-Pacf(deseason_inflow_data,lag.max=40,main=paste("Inflows HP15",sep=""))
+Pacf(deseason_inflow_full,lag.max=40,main=paste("Inflows HP15",sep=""))
 ```
 
 ## Part II: Forecasting with ARIMA models and its variations
@@ -101,12 +117,17 @@ Pacf(deseason_inflow_data,lag.max=40,main=paste("Inflows HP15",sep=""))
 Fit a non-seasonal ARIMA$(p,d,q)$ model using the auto.arima() function to the non-seasonal data. Forecast 12 months ahead of time using the $forecast()$ function. Plot your forecasting results and further include on the plot the last year of non-seasonal data to compare with forecasted values (similar to the plot on the lesson file for M9).
 
 ```{r}
-#non-seasonal ARIMA
-ARIMA_autofit <- auto.arima(deseason_inflow_data, max.D = 0, max.P = 0, max.Q = 0)
+#fit non-seasonal ARIMA model and forecast
+ARIMA_autofit <- auto.arima(deseason_inflow_test, max.D = 0, max.P = 0, max.Q = 0)
 print(ARIMA_autofit)
 
 ARIMA_forecast <- forecast(object = ARIMA_autofit, h = 12)
 plot(ARIMA_forecast)
+
+#plot forecast and last year of non-seasonal data
+
+autoplot(deseason_inflow_full) +
+  autolayer(ARIMA_forecast, series="ARIMA Forecast without Seasonality")
 ```
 
 ### Q4
@@ -115,7 +136,13 @@ Put the seasonality back on your forecasted values and compare with the original
 
 
 ```{r}
+seasonal <- ts_inflow_full - deseason_inflow_full
 
+new_ARIMA_forecast <- ARIMA_forecast$mean + seasonal[1:12]
+
+autoplot(ts_inflow_full) +
+  autolayer(new_ARIMA_forecast, series = "ARIMA Forecast with Seasonality") 
+  
 ```
 
 ### Q5
@@ -123,7 +150,7 @@ Put the seasonality back on your forecasted values and compare with the original
 Repeat Q3 for the original data, but now fit a seasonal ARIMA$(p,d,q)x(P,D,Q)_ {12}$ also using the auto.arima().
 
 ```{r}
-SARIMA_autofit <- auto.arima(ts_inflow_data)
+SARIMA_autofit <- auto.arima(ts_inflow_test)
 print(SARIMA_autofit)
 
 SARIMA_forecast <- forecast(object = SARIMA_autofit, h = 12)
@@ -134,7 +161,9 @@ plot(SARIMA_forecast)
 
 Compare the plots from Q4 and Q5 using the autoplot() function.
 ```{r}
-
+autoplot(ts_inflow_full)+
+  autolayer(new_ARIMA_forecast, series = "ARIMA Forecast with Seasonality") +
+  autolayer(SARIMA_forecast, series = "SARMIA Forecast", alpha=0.5)
 ```
 
 ## Part III: Forecasting with Other Models
@@ -144,7 +173,7 @@ Compare the plots from Q4 and Q5 using the autoplot() function.
 Fit an exponential smooth model to the original time series using the function $ses()$  from package `forecast`. Note that this function automatically do the forecast. Do not forget to set the arguments: silent=FALSE and holdout=FALSE, so that the plot is produced and the forecast is for the year of 2010.
 
 ```{r}
-SES_seas_fit <- ses(y = ts_inflow_data, h = 12, holdout = FALSE, silent = FALSE)
+SES_seas_fit <- ses(y = ts_inflow_test, h = 12, holdout = FALSE, silent = FALSE)
 summary(SES_seas_fit)
 plot(SES_seas_fit)
 ```
@@ -158,23 +187,42 @@ Make one plot with the complete original seasonal historical data (Jan 2000 to D
 
 
 ```{r}
-
+autoplot(ts_inflow_full) +
+  autolayer(new_ARIMA_forecast, series = "ARIMA Forecast with Seasonality") +
+  autolayer(SARIMA_forecast, series = "SARMIA Forecast", alpha =0.3) +
+  autolayer(SES_seas_fit, series = "Simple Exponential Smoothing Forecast", alpha=0.3)
 ```
 
 ### Q9
 
 From the plot in Q8 which model or model(s) are leading to the better forecasts? Explain your answer. Hint: Think about which models are doing a better job forecasting the high and low inflow months for example.
 
-
-```{r}
-
-```
+> Answer: The Sarima model led to the best forecast. While it forecast values higher then the peak and lower then the valley of the actual data, it was closer then the ARIMA with seasonality and far better then the SES model. 
 
 ### Q10
 
 Now compute the following forecast metrics we learned in class: RMSE and MAPE,  for all the models you plotted in part Q9. You can do this by hand since you have forecasted and observed values for the year of 2010. Or you can use R function $accuracy()$ from package "forecast" to do it. Build and a table with the results and highlight the model with the lowest MAPE. Does the lowest MAPE corresponds match your answer for part Q9?
 
 ```{r}
+#generate scores
+#ARIMA_score <- accuracy(new_ARIMA_forecast) #I'm not sure why but I got an error message that R was unable to compute forecast accuracy measures. Left ARIMA scores out of the rest of the coding
+SARIMA_score <- accuracy(SARIMA_forecast)
+SES_score <- accuracy(SES_seas_fit)
 
+#make data frame of scores
+collected_scores<-as.data.frame(rbind(SARIMA_score, SES_score))
+row.names(collected_scores) <- c("SARIMA", "SES")
+
+#make table
+best_model_index <- which.min(collected_scores[,"MAPE"])
+cat("The best model by MAPE is:", row.names(collected_scores[best_model_index,])) 
+
+#kbl(collected_scores, 
+      #caption = "Forecast Accuracy for Seasonal Data",
+     # digits = array(5,ncol(collected_scores))) %>%
+  
+#kable_styling(full_width = FALSE, position = "center") %>%
+  #kable_styling(latex_options="striped", stripe_index = #which.min(collected_scores[,"MAPE"]))
+#got an error message when trying to knit to PDF related to LaTex (related to needing an update), wasn't sure what to do but wanted to at least show my code
 ```
 

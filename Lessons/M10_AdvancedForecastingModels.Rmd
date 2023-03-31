@@ -9,7 +9,7 @@ editor_options:
     wrap: sentence
 ---
 
-## Learning Goals for M11
+## Learning Goals for M10
 
 1. Discuss challenges in forecasting higher frequency time series.
 2. Discuss complex seasonalities.
@@ -58,8 +58,8 @@ The `ts()` function we have been using to create time series objects can only ha
 #include only output table in report not the code used to generate
 
 df_frequency_spec <- data.frame(
-  Data = c("Annual", "Quartely","Monthly","Weekly"),
-  Frequency = c(1,2,12,52)
+  Data = c("Annual", "Quarterly","Monthly","Weekly"),
+  Frequency = c(1,4,12,52)
 )
 
 kbl(df_frequency_spec, caption="Frequency used with ts() function") %>% 
@@ -265,21 +265,21 @@ autoplot(ts_act_power_daily) +
 
 ### Model 2: ARIMA + FOURIER terms
 
-Since we have multiple seasonalities, the SARIMA model will not work. But we can work with an ARIMA model with Fourier terms for each seasonal period. This models is known as a dynamic harmonic regression model with an ARMA error structure. We will use a log transformation (`lambda=0`) in the `auto.arima()` to ensure the forecasts and prediction intervals remain positive. And for the fourier terms we will use function `fourier()` from package `forecast`. The number of fourier terms needed is specified in argument `K=`. K should be a vector of integers specifying the number of sine and cosine terms for each of the seasonal periods. Ideally K is chosen to minimize the AICc, but we will not go over it. 
+Since we have multiple seasonalities, the SARIMA model will not work. But we can work with an ARIMA model with Fourier terms for each seasonal period. This model is known as a dynamic harmonic regression model with an ARMA error structure. We will use a log transformation (`lambda=0`) in the `auto.arima()` to ensure the forecasts and prediction intervals remain positive. And for the fourier terms we will use function `fourier()` from package `forecast`. The number of fourier terms needed is specified in argument `K=`. K should be a vector of integers specifying the number of sine and cosine terms for each of the seasonal periods. Ideally K is chosen to minimize the AICc, but we will not go over it. 
 
 Fourier terms are used to model the seasonal components. It resembles the seasonal dummies we used in previous modules, but they are based on trigonometric functions. More info on fourier terms [here](https://otexts.com/fpp2/useful-predictors.html#useful-predictors). 
 
 ```{r ARIMA, echo=TRUE, message=FALSE, warning=FALSE}
 #Fit arima model with fourier terms as exogenous regressors
 # seasonal = FALSE is the same as P=D=Q=0
-# play with K by changing it to K=c(2,2), K=c(2,4), K=c(2,6), etc. The higher teh K the longer it will take to converge, because R will try more models.
+# play with K by changing it to K=c(2,2), K=c(2,4), K=c(2,6), etc. The higher the K the longer it will take to converge, because R will try more models.
 
 ARIMA_Four_fit <- auto.arima(ts_act_power_daily_train, 
                              seasonal=FALSE, 
                              lambda=0,
                              xreg=fourier(ts_act_power_daily_train, 
-                                          K=c(2,12))
-                             )
+                                          K=c(2,12)
+                             ))
 
 #Forecast with ARIMA fit
 #also need to specify h for fourier terms
