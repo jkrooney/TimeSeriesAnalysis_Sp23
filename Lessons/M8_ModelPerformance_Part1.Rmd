@@ -23,15 +23,12 @@ Second R code chunk is for loading packages. By setting message = FALSE, the cod
 library(lubridate)
 library(ggplot2)
 library(forecast)  
-<<<<<<< HEAD
 library(Kendall)
 library(tseries)
 library(outliers)
-=======
 #library(Kendall)
 library(tseries)
 #library(outliers)
->>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
 library(tidyverse)
 library(smooth)
 
@@ -68,11 +65,11 @@ electricity_price_processed <-
   rename( Industrial = industrial.cents.per.kilowatthour ) %>% 
   arrange( Month )
 
-<<<<<<< HEAD
+
 head(electricity_price_processed)
-=======
+
 #head(electricity_price_processed)
->>>>>>> d453bcaa1e7ba0def7109f5e9d214404293702b1
+
 summary(electricity_price_processed)
 
 #No NAs so we don't need to worry about missing values

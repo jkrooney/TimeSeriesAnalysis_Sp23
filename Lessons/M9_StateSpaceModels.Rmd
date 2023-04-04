@@ -23,9 +23,9 @@ Second R code chunk is for loading packages. By setting message = FALSE, the cod
 library(lubridate)
 library(ggplot2)
 library(forecast)  
-#library(Kendall)
+library(Kendall)
 library(tseries)
-#library(outliers)
+library(outliers)
 library(tidyverse)
 library(smooth)
 
@@ -172,7 +172,7 @@ Notice the residual series seems to be random and ACF shows no significant self 
 Let's start by trying an exponential smoothing under the state space model. In teh videos we went over the state equation for level only. But the ES can be used to represent trend and seasonal as well, these are know as ETS (Exponential Trend and Seasonal) models. We will talk in more details on M11.
 
 ```{r}
-SSES_seas <- es(ts_price,model="ZZZ",h=n_for,holdout=FALSE,silent="none")
+SSES_seas <- es(ts_price,model="ZZZ",h=n_for,holdout=FALSE)
 plot(SSES_seas)
 checkresiduals(SSES_seas)
 ```
@@ -189,8 +189,10 @@ The function takes a few arguments, here are the important ones:
 
 
 ```{r}
-SS_seas <- StructTS(ts_price,
-                    type="BSM",fixed=c(0,0.001,0.3,NA))   #this function has convergence issues
+SS_seas <- StructTS(ts_price, type="BSM", fixed=c(NA,NA,NA,NA))
+
+#SS_seas <- StructTS(ts_price,
+                    #type="BSM",fixed=c(0,0.001,0.3,NA))   #this function has convergence issues
 checkresiduals(SS_seas)
 
 #Generating forecasts
